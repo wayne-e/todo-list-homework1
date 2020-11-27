@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO DO List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="flex">
+        <div class="flex full-width">
+            <h2>TO-DO LIST</h2>
+        </div>
+        <div class="flex full-width blue-bgrc icon-container">
+            <div class="flex header-element">
+                <i class="fas fa-filter"></i>
+                <h3 class="header-title">Filtrar</h3>
+            </div>
+            <div class="flex header-element">
+                <i class="fas fa-search"></i>
+                <h3 class="header-title">Buscar</h3>
+            </div>
+            <div class="flex header-element">
+                <i class="fas fa-plus"></i>
+                <h3 class="header-title">Añadir</h3>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div id="" class="flex todo-element">
+            <h2 class="todo-title full-width">Visita al Médico</h2>
+            <div class="flex full-width detail-element">
+                <i class="fas fa-calendar detail-icon"></i>
+                <h2>Fecha: <span class="todo-date">13-Sep-2020</span></h2>
+            </div>
+            <div class="flex full-width detail-element">
+                <i class="fas fa-clock detail-icon"></i>
+                <h2>Hora: <span class="todo-time">14:00</span></h2>
+            </div>
+            <div class="flex full-width detail-element">
+                <i class="fas fa-exclamation-circle detail-icon"></i>
+                <h3>Prioridad: <span class="todo-priority">Alta</span></h3>
+            </div>
+            <div class="flex full-width detail-element">
+                <i class="fas fa-flag detail-icon"></i>
+                <h3>Estado: <span class="todo-state">Completo</span></h3>
+            </div>
+        </div>
+        <div id="form-div" class="flex">
+            <div class="black-background"></div>
+            <form action="" class="flex newelement-form">
+                <h2 class="full-width">Nueva Tarea</h2>
+                <input class="full-width input-element" type="text" id="todo-element-name" value="Nombre de Tarea">
+                <input class="full-width input-element" type="date" id="todo-element-date">
+                <input class="full-width input-element" type="time" name="" id="todo-element-time">
+                <select id="priority-select" class="full-width input-element">
+                    <option value="0">Prioridad</option>
+                    <option value="1">Normal</option>
+                    <option value="2">Media</option>
+                    <option value="3">Alta</option>
+                </select>
+                <button type="button" class="save-btn">GUARDAR</button>
+            </form>
+        </div>
+    </main>
+    <script src="script.js"></script>
+    <script src="https://kit.fontawesome.com/ef503248b8.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
