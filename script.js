@@ -51,45 +51,6 @@ class TODOElement {
     set status(newStatus) {
         this._status = newStatus;
     }
-
-    createHTML() {
-        let htmlTemplate = `
-        <div id="${this._id}" class="flex todo-element">
-            <div class="full-width relative-class">
-                <i class="fas fa-window-close absolute-item delete-reminder-button"></i>
-            </div>
-            <h2 class="todo-title full-width">${this._name}</h2>
-            <div class="flex full-width detail-element">
-                <i class="fas fa-calendar detail-icon"></i>
-                <h3>Fecha: <span class="todo-date">${this._reminderDate}</span></h3>
-            </div>
-            <div class="flex full-width detail-element">
-                <i class="fas fa-clock detail-icon"></i>
-                <h3>Hora: <span class="todo-time">${this._reminderTime}</span></h3>
-            </div>
-            <div class="flex full-width detail-element">
-                <i class="fas fa-book detail-icon"></i>
-                <h3>Fecha de Creación: <span class="todo-creationdate">${this._creationDate}</span></h3>
-            </div>
-            <div class="flex full-width detail-element">
-                <i class="fas fa-exclamation-circle detail-icon"></i>
-                <h3>Prioridad: <span class="todo-priority">${this.priority}</span></h3>
-            </div>
-            <div class="flex full-width detail-element">
-                <i class="fas fa-flag detail-icon"></i>
-                <h3>Estado: <span class="todo-state">${this._status}</span></h3>
-            </div>                   
-        `;
-        if (this._status !== "Completo") {
-            htmlTemplate += `
-            <div class="flex full-width complete-box">
-            <i class="fas fa-check detail-icon"></i>
-            <h4>Marcar como Completo</h4>
-            </div> `;
-        }
-        htmlTemplate += `</div>`;
-        return htmlTemplate;
-    }
 }
 
 const body = document.querySelector("body");
@@ -103,16 +64,18 @@ const prioritySelect = document.getElementById("priority-select");
 const closeModalBtn = document.getElementById("close-new-element");
 const reminderSection = document.getElementById("reminder-section");
 let deleteReminderButtons, completeButtons;
-let toDoList = [], idCounter = 1, name, priority = 0, reminderDate, reminderTime, creationDate, parameter, id, index;
+let name, priority = 0, reminderDate, reminderTime, creationDate, parameter, id, index;
+let idCounter = parseInt(localStorage.getItem("idCounter")) || 1;
+let toDoList = JSON.parse(localStorage.getItem("reminders")) || [];
 
-//readLocalStorage();
+createElements();
 
 body.addEventListener("click", function (e) {
     if (e.target.classList.contains("delete-reminder-button")) {
         id = e.target.parentNode.parentNode.getAttribute("id");
         e.target.parentNode.parentNode.remove();
         toDoList.forEach(element => {
-            if (element.id === id) {
+            if (element._id === id) {
                 index = toDoList.indexOf(element);
                 toDoList.splice(index, 1);
                 toLocalStorage();
@@ -124,8 +87,8 @@ body.addEventListener("click", function (e) {
         id = e.target.parentNode.getAttribute("id");
         e.target.remove();
         toDoList.forEach(element => {
-            if (element.id === id) {
-                element.status = "Completo";
+            if (element._id === id) {
+                element._status = "Completo";
                 createElements();
                 toLocalStorage();
                 return;
@@ -220,9 +183,9 @@ closeModalBtn.addEventListener("click", function () {
 //Enviar los objetos a HTML
 function createElements() {
     reminderSection.innerHTML = "";
-    for (let i = 0; i < toDoList.length; i++) {
-        reminderSection.innerHTML += toDoList[i].createHTML();
-    }
+    toDoList.forEach(element =>{
+        reminderSection.innerHTML += createHTML(element);
+    });
     deleteReminderButtons = document.getElementsByClassName("delete-reminder-button");
     completeButtons = document.getElementsByClassName("complete-box");
 }
@@ -231,19 +194,42 @@ function toLocalStorage() {
     localStorage.setItem("reminders", JSON.stringify(toDoList));
     localStorage.setItem("idCounter", idCounter);
 }
-/*
-function readLocalStorage() {
-    alert("entra1");
-    if (localStorage.getItem("reminders")) {
-        alert("entra2");
-        toDoList = JSON.parse(localStorage.getItem("reminders"), function (key, value) {
-            //if (key) { 
-                return new TODOElement(value); 
-            //}
-            //return value;
-        });
-        console.log(toDoList);
-        idCounter = parseInt(localStorage.getItem("idCounter"));
-        createElements();
+
+function createHTML(objeto) {
+    let htmlTemplate = `
+    <div id="${objeto._id}" class="flex todo-element">
+        <div class="full-width relative-class">
+            <i class="fas fa-window-close absolute-item delete-reminder-button"></i>
+        </div>
+        <h2 class="todo-title full-width">${objeto._name}</h2>
+        <div class="flex full-width detail-element">
+            <i class="fas fa-calendar detail-icon"></i>
+            <h3>Fecha: <span class="todo-date">${objeto._reminderDate}</span></h3>
+        </div>
+        <div class="flex full-width detail-element">
+            <i class="fas fa-clock detail-icon"></i>
+            <h3>Hora: <span class="todo-time">${objeto._reminderTime}</span></h3>
+        </div>
+        <div class="flex full-width detail-element">
+            <i class="fas fa-book detail-icon"></i>
+            <h3>Fecha de Creación: <span class="todo-creationdate">${objeto._creationDate}</span></h3>
+        </div>
+        <div class="flex full-width detail-element">
+            <i class="fas fa-exclamation-circle detail-icon"></i>
+            <h3>Prioridad: <span class="todo-priority">${objeto._priority}</span></h3>
+        </div>
+        <div class="flex full-width detail-element">
+            <i class="fas fa-flag detail-icon"></i>
+            <h3>Estado: <span class="todo-state">${objeto._status}</span></h3>
+        </div>                   
+    `;
+    if (objeto._status !== "Completo") {
+        htmlTemplate += `
+        <div class="flex full-width complete-box">
+        <i class="fas fa-check detail-icon"></i>
+        <h4>Marcar como Completo</h4>
+        </div> `;
     }
-}*/
+    htmlTemplate += `</div>`;
+    return htmlTemplate;
+}
