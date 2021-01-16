@@ -63,7 +63,6 @@ const inputElementTime = document.getElementById("todo-element-time");
 const prioritySelect = document.getElementById("priority-select");
 const closeModalBtn = document.getElementById("close-new-element");
 const reminderSection = document.getElementById("reminder-section");
-const searchButton = document.getElementById("search-button");
 const searchInput = document.getElementById("search-input");
 let deleteReminderButtons, completeButtons;
 let name, priority = 0, reminderDate, reminderTime, creationDate, parameter, id, index;
@@ -100,6 +99,10 @@ body.addEventListener("click", function (e) {
     else if (e.target.parentNode.classList.contains("filters-div")) {
         const parameter = e.target.getAttribute("id");
         reminderSection.innerHTML = "";
+        if (parameter === "default") {
+            createElements();
+            return;
+        }
         toDoList.forEach(element => {
             for (prop in element) {
                 if (element[prop].includes(parameter)) {
@@ -115,6 +118,15 @@ body.addEventListener("click", function (e) {
 
 newElementBtn.addEventListener("click", function () {
     formDiv.classList.remove("display-none");
+    creationDate = new Date();
+    let creationDay = creationDate.getDate(), creationMonth = creationDate.getMonth() + 1;
+    if (creationMonth < 10) {
+        creationMonth = "0" + creationMonth;
+    }
+    if (creationDay < 10) {
+        creationDay = "0" + creationDay;
+    }
+    inputElementDate.setAttribute("min", `${creationDate.getFullYear()}-${creationMonth}-${creationDay}`);
 });
 
 prioritySelect.onchange = function () {
@@ -130,7 +142,6 @@ prioritySelect.onchange = function () {
     }
 }
 saveButton.addEventListener("click", function () {
-    creationDate = new Date();
     name = inputElementName.value;
     reminderDate = inputElementDate.value;
     reminderTime = inputElementTime.value;
@@ -162,7 +173,7 @@ saveButton.addEventListener("click", function () {
                 }
                 else if (parameter === creationDate.getDate()) {
                     parameter = parseInt(reminderTime[0] + reminderTime[1]);
-                    if (parameter < creationDate.getHours()) {
+                    if (parameter < creationDate.getHours() + 1) {
                         alert("Hora inválida");
                         return;
                     }
@@ -196,9 +207,13 @@ closeModalBtn.addEventListener("click", function () {
     formDiv.classList.add("display-none");
 });
 
-searchButton.addEventListener("click", function () {
+searchInput.onkeyup = function () {
     const searchParameter = searchInput.value;
     reminderSection.innerHTML = "";
+    if (searchParameter === "") {
+        createElements();
+        return;
+    }
     toDoList.forEach(element => {
         if (element._name.includes(searchParameter)) {
             reminderSection.innerHTML += createHTML(element);
@@ -206,7 +221,7 @@ searchButton.addEventListener("click", function () {
     });
     deleteReminderButtons = document.getElementsByClassName("delete-reminder-button");
     completeButtons = document.getElementsByClassName("complete-box");
-});
+}
 
 
 //Enviar los objetos a HTML
@@ -262,6 +277,3 @@ function createHTML(objeto) {
     htmlTemplate += `</div>`;
     return htmlTemplate;
 }
-/*
-function filterElements(parameter) {
-}*/
