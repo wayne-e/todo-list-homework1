@@ -63,6 +63,8 @@ const inputElementTime = document.getElementById("todo-element-time");
 const prioritySelect = document.getElementById("priority-select");
 const closeModalBtn = document.getElementById("close-new-element");
 const reminderSection = document.getElementById("reminder-section");
+const searchButton = document.getElementById("search-button");
+const searchInput = document.getElementById("search-input");
 let deleteReminderButtons, completeButtons;
 let name, priority = 0, reminderDate, reminderTime, creationDate, parameter, id, index;
 let idCounter = parseInt(localStorage.getItem("idCounter")) || 1;
@@ -94,6 +96,20 @@ body.addEventListener("click", function (e) {
                 return;
             }
         });
+    }
+    else if (e.target.parentNode.classList.contains("filters-div")) {
+        const parameter = e.target.getAttribute("id");
+        reminderSection.innerHTML = "";
+        toDoList.forEach(element => {
+            for (prop in element) {
+                if (element[prop].includes(parameter)) {
+                    reminderSection.innerHTML += createHTML(element);
+                }
+            }
+        });
+        deleteReminderButtons = document.getElementsByClassName("delete-reminder-button");
+        completeButtons = document.getElementsByClassName("complete-box");
+
     }
 });
 
@@ -180,10 +196,23 @@ closeModalBtn.addEventListener("click", function () {
     formDiv.classList.add("display-none");
 });
 
+searchButton.addEventListener("click", function () {
+    const searchParameter = searchInput.value;
+    reminderSection.innerHTML = "";
+    toDoList.forEach(element => {
+        if (element._name.includes(searchParameter)) {
+            reminderSection.innerHTML += createHTML(element);
+        }
+    });
+    deleteReminderButtons = document.getElementsByClassName("delete-reminder-button");
+    completeButtons = document.getElementsByClassName("complete-box");
+});
+
+
 //Enviar los objetos a HTML
 function createElements() {
     reminderSection.innerHTML = "";
-    toDoList.forEach(element =>{
+    toDoList.forEach(element => {
         reminderSection.innerHTML += createHTML(element);
     });
     deleteReminderButtons = document.getElementsByClassName("delete-reminder-button");
@@ -233,3 +262,6 @@ function createHTML(objeto) {
     htmlTemplate += `</div>`;
     return htmlTemplate;
 }
+/*
+function filterElements(parameter) {
+}*/
